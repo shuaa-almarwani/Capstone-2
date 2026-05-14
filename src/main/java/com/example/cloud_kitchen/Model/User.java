@@ -29,6 +29,10 @@ public class User {
     @Column(columnDefinition = "varchar(50) unique")
     private String email;
 
+    @NotEmpty(message = "phone cannot be empty")
+    @Column(columnDefinition = "varchar(15) unique not null")
+    private String phone;
+
     @NotEmpty(message = "password can not be empty")
     @Size(min = 6 , message = "password must be more than 5 characters")
     @Column(columnDefinition = "varchar(100) not null")
