@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -25,17 +27,18 @@ public class Order {
 
     @NotNull(message = "vendorId is required")
     private Integer vendorId;
+    @NotNull(message = "menuItemIds is required")
+    private List<Integer> menuItemIds;
 
-    private Integer driverId; //
+    private Integer driverId;
 
-    @NotNull(message = "product name is required")
-    private String productName;
 
-    @NotNull(message = "price is required")
-    private Double price;
+    //    @NotNull(message = "totaPrice is required")
+    private Double totalPrice;
 
-    private String status; // NEW - ACCEPTED - ON_THE_WAY - DELIVERED - CANCELLED
 
-    private String paymentMethod; // CASH - CARD
+    private String status;
+    // NEW ، ACCEPTED ، ON_THE_WAY ، DELIVERED ، CANCELLED
+    private String paymentMethod;
 
 }

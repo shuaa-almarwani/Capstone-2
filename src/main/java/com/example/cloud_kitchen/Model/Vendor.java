@@ -32,7 +32,15 @@ public class Vendor {
     @Column(columnDefinition = "varchar(100)")
     private String location;
 
+    @NotEmpty(message = "phone cannot be empty")
+    @Pattern(regexp = "^(?:\\+?966|0)?5[0-9]{8}$", message = "Invalid Saudi mobile number format")
+    @Column(columnDefinition = "varchar(15) not null")
+    private String phone;
+
     @Column(columnDefinition = "boolean default true")
     private Boolean available;
+
+    @NotEmpty(message = "commercialRegistration cannot be empty")
+    private String commercialRegistration;
 
 }

@@ -21,36 +21,42 @@ public class DriverController {
         return ResponseEntity.ok(driverService.getAllDrivers());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addDriver(@RequestBody @Valid Driver driver, Errors errors) {
-
+    @PostMapping("/add/{adminId}")
+    public ResponseEntity<?> addDriver(@PathVariable Integer adminId,
+                                       @RequestBody @Valid Driver driver,
+                                       Errors errors) {
         if (errors.hasErrors()) {
             return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
         }
-
-        driverService.addDriver(driver);
-        return ResponseEntity.ok(new ApiResponse("driver added successfully"));
+        driverService.addDriver(adminId, driver);
+        return ResponseEntity.ok(new ApiResponse("Driver added successfully by Admin"));
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateDriver(@PathVariable Integer id,
+    @PutMapping("/update/{requesterId}/{driverId}")
+    public ResponseEntity<?> updateDriver(@PathVariable Integer requesterId,
+                                          @PathVariable Integer driverId,
                                           @RequestBody @Valid Driver driver,
                                           Errors errors) {
-
         if (errors.hasErrors()) {
             return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
         }
-
-        driverService.updateDriver(id, driver);
-        return ResponseEntity.ok(new ApiResponse("driver updated successfully"));
+        driverService.updateDriver(requesterId, driverId, driver);
+        return ResponseEntity.ok(new ApiResponse("Driver updated successfully"));
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteDriver(@PathVariable Integer id) {
-
-        driverService.deleteDriver(id);
-        return ResponseEntity.ok(new ApiResponse("driver deleted successfully"));
+    @DeleteMapping("/delete/{adminId}/{driverId}")
+    public ResponseEntity<?> deleteDriver(@PathVariable Integer adminId, @PathVariable Integer driverId) {
+        driverService.deleteDriver(adminId, driverId);
+        return ResponseEntity.ok(new ApiResponse("Driver deleted successfully"));
     }
 
+
+
+
+    // #22
+    @GetMapping("/available")
+    public ResponseEntity<?> getAvailableDrivers() {
+        return ResponseEntity.ok(driverService.getAvailableDrivers());
+    }
 }
 

@@ -22,7 +22,7 @@ public class Notification {
     @NotNull(message = "userId is required")
     private Integer userId;
 
-    @NotNull(message = "orderId is required")
+    //    @NotNull(message = "orderId is required")
     private Integer orderId;
 
     @NotNull(message = "message is required")
@@ -30,7 +30,7 @@ public class Notification {
 
     @NotNull(message = "type is required")
     private String type;
-    // ORDER_UPDATE - DELIVERY - INVOICE - PROMOTION
+
     private Boolean sentByEmail = false;
 
     private Boolean sentByWhatsApp = false;

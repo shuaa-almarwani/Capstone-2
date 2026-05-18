@@ -16,47 +16,77 @@ import org.springframework.web.bind.annotation.*;
 public class VendorController {
     private final VendorService vendorService;
 
+
     @GetMapping("/get")
     public ResponseEntity<?> getAllVendors() {
-
         return ResponseEntity.status(200).body(vendorService.getAllVendors());
     }
-
-    @PostMapping("/add")
-    public ResponseEntity<?> addVendor(@RequestBody @Valid Vendor vendor,
+    @PostMapping("/add/{adminId}")
+    public ResponseEntity<?> addVendor(@PathVariable Integer adminId,
+                                       @RequestBody @Valid Vendor vendor,
                                        Errors errors) {
-
         if (errors.hasErrors()) {
             return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
         }
-
-        vendorService.addVendor(vendor);
-
-        return ResponseEntity.status(201).body(new ApiResponse("vendor added successfully"));
+        vendorService.addVendor(adminId, vendor);
+        return ResponseEntity.status(201).body(new ApiResponse("Vendor added successfully"));
     }
-
-    @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateVendor(@PathVariable Integer id,
+    @PutMapping("/update/{requesterId}/{vendorId}")
+    public ResponseEntity<?> updateVendor(@PathVariable Integer requesterId,
+                                          @PathVariable Integer vendorId,
                                           @RequestBody @Valid Vendor vendor,
                                           Errors errors) {
-
         if (errors.hasErrors()) {
             return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
         }
-
-        vendorService.updateVendor(id, vendor);
-
-        return ResponseEntity.status(200).body(new ApiResponse("vendor updated successfully"));
+        vendorService.updateVendor(requesterId, vendorId, vendor);
+        return ResponseEntity.status(200).body(new ApiResponse("Vendor updated successfully"));
     }
-
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> deleteVendor(@PathVariable Integer id) {
-
-        vendorService.deleteVendor(id);
-
-        return ResponseEntity.status(200).body(new ApiResponse("vendor deleted successfully"));
+    @DeleteMapping("/delete/{adminId}/{vendorId}")
+    public ResponseEntity<?> deleteVendor(@PathVariable Integer adminId, @PathVariable Integer vendorId) {
+        vendorService.deleteVendor(adminId, vendorId);
+        return ResponseEntity.status(200).body(new ApiResponse("Vendor deleted successfully"));
     }
 
 
+
+
+    // #4
+    @GetMapping("/type/{type}")
+    public ResponseEntity<?> getVendorByType(@PathVariable String type) {
+        return ResponseEntity.status(200).body(vendorService.getVendorByType(type));
+    }
+
+    // #5
+    @GetMapping("/available")
+    public ResponseEntity<?> getAvailableVendors() {
+        return ResponseEntity.status(200).body(vendorService.getAvailableVendors());
+    }
+
+    // #6
+    @GetMapping("/location/{location}")
+    public ResponseEntity<?> getVendorByLocation(@PathVariable String location) {
+        return ResponseEntity.status(200).body(vendorService.getVendorByLocation(location));
+    }
+
+    // #7
+    @PutMapping("/toggle/{requesterId}/{vendorId}")
+    public ResponseEntity<?> toggleAvailability(@PathVariable Integer requesterId,
+                                                @PathVariable Integer vendorId) {
+        vendorService.toggleAvailability(requesterId, vendorId);
+        return ResponseEntity.status(200).body(new ApiResponse("Vendor availability updated"));
+    }
+
+    // #8
+    @GetMapping("/dashboard-summary/{vendorId}")
+    public ResponseEntity<?> getDashboard(@PathVariable Integer vendorId) {
+        return ResponseEntity.ok(vendorService.getDashboardSummary(vendorId));
+    }
+
+    // #9
+    @GetMapping("/top")
+    public ResponseEntity<?> getTopRatedVendors() {
+        return ResponseEntity.ok(vendorService.getHighRatings());
+    }
 
 }

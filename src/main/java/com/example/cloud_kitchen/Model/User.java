@@ -29,18 +29,21 @@ public class User {
     @Column(columnDefinition = "varchar(50) unique")
     private String email;
 
-    @NotEmpty(message = "phone cannot be empty")
-    @Column(columnDefinition = "varchar(15) unique not null")
-    private String phone;
-
     @NotEmpty(message = "password can not be empty")
     @Size(min = 6 , message = "password must be more than 5 characters")
     @Column(columnDefinition = "varchar(100) not null")
     private String password;
 
+    @NotEmpty(message = "phone cannot be empty")
+    @Pattern(regexp = "^(?:\\+?966|0)?5[0-9]{8}$", message = "Invalid Saudi mobile number format")
+    @Column(columnDefinition = "varchar(15) not null")
+    private String phone;
+
     @NotEmpty(message = "address can not be empty")
     @Column(columnDefinition = "varchar(100) not null")
     private String address;
+
+
 
     @Pattern(regexp = "USER|ADMIN", message = "role must be USER or ADMIN")
     @Column(columnDefinition = "varchar(10) not null")
