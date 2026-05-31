@@ -23,17 +23,30 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.getAllReviews());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addReview(@RequestBody @Valid Review review,
-                                       Errors errors) {
+    // @PostMapping("/add")
+    // public ResponseEntity<?> addReview(@RequestBody @Valid Review review,
+    //                                    Errors errors) {
 
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
-        }
+    //     if (errors.hasErrors()) {
+    //         return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
+    //     }
 
-        reviewService.addReview(review);
-        return ResponseEntity.status(201).body(new ApiResponse("review added"));
+    //     reviewService.addReview(review);
+    //     return ResponseEntity.status(201).body(new ApiResponse("review added"));
+    // }
+    @PostMapping("/add/{userId}/{vendorId}")
+public ResponseEntity<?> addReview(@PathVariable Integer userId,
+                                   @PathVariable Integer vendorId,
+                                   @RequestBody @Valid Review review,
+                                   Errors errors) {
+
+    if (errors.hasErrors()) {
+        return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
     }
+
+    reviewService.addReview(userId, vendorId, review);
+    return ResponseEntity.status(201).body(new ApiResponse("review added"));
+}
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateReview(@PathVariable Integer id,
