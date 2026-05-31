@@ -27,48 +27,91 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public void addOrder(Order order) {
+    // public void addOrder(Order order) {
 
-        if (userRepository.findUserById(order.getUserId()) == null) {
-            throw new ApiException("user not found");
-        }
+    //     if (userRepository.findUserById(order.getUserId()) == null) {
+    //         throw new ApiException("user not found");
+    //     }
 
-        Vendor vendor = vendorRepository.findVendorById(order.getVendorId());
-        if (vendor == null) {
-            throw new ApiException("Vendor not found");
-        }
+    //     Vendor vendor = vendorRepository.findVendorById(order.getVendorId());
+    //     if (vendor == null) {
+    //         throw new ApiException("Vendor not found");
+    //     }
 
-        if (!vendor.getAvailable()) {
-            throw new ApiException("This vendor is not available right now");
-        }
+    //     if (!vendor.getAvailable()) {
+    //         throw new ApiException("This vendor is not available right now");
+    //     }
 
-        double total = 0;
+    //     double total = 0;
 
-        if (order.getMenuItemIds() == null || order.getMenuItemIds().isEmpty()) {
-            throw new ApiException("Menu items are required");
-        }
+    //     if (order.getMenuItemIds() == null || order.getMenuItemIds().isEmpty()) {
+    //         throw new ApiException("Menu items are required");
+    //     }
 
-        for (Integer menuId : order.getMenuItemIds()) {
+    //     for (Integer menuId : order.getMenuItemIds()) {
 
-            Menu menu = menuRepository.findMenuById(menuId);
+    //         Menu menu = menuRepository.findMenuById(menuId);
 
-            if (menu == null) {
-                throw new ApiException("Menu not found: " + menuId);
-            }
+    //         if (menu == null) {
+    //             throw new ApiException("Menu not found: " + menuId);
+    //         }
 
-            // is the menu for the vendor?
-            if (!menu.getVendorId().equals(vendor.getId())) {
-                throw new ApiException("Menu item does not belong to this vendor");
-            }
+    //         // is the menu for the vendor?
+    //         if (!menu.getVendorId().equals(vendor.getId())) {
+    //             throw new ApiException("Menu item does not belong to this vendor");
+    //         }
 
-            total += menu.getPrice();
-        }
+    //         total += menu.getPrice();
+    //     }
 
-        order.setTotalPrice(total);
-        order.setStatus("NEW");
+    //     order.setTotalPrice(total);
+    //     order.setStatus("NEW");
 
-        orderRepository.save(order);
+    //     orderRepository.save(order);
+    // }
+    public void addOrder(Integer userId, Integer vendorId, Order order) {
+
+    if (userRepository.findUserById(userId) == null) {
+        throw new ApiException("user not found");
     }
+
+    Vendor vendor = vendorRepository.findVendorById(vendorId);
+    if (vendor == null) {
+        throw new ApiException("Vendor not found");
+    }
+
+    if (!vendor.getAvailable()) {
+        throw new ApiException("This vendor is not available right now");
+    }
+
+    double total = 0;
+
+    if (order.getMenuItemIds() == null || order.getMenuItemIds().isEmpty()) {
+        throw new ApiException("Menu items are required");
+    }
+
+    for (Integer menuId : order.getMenuItemIds()) {
+
+        Menu menu = menuRepository.findMenuById(menuId);
+
+        if (menu == null) {
+            throw new ApiException("Menu not found: " + menuId);
+        }
+
+        if (!menu.getVendorId().equals(vendor.getId())) {
+            throw new ApiException("Menu item does not belong to this vendor");
+        }
+
+        total += menu.getPrice();
+    }
+
+    order.setUserId(userId);
+    order.setVendorId(vendorId);
+    order.setTotalPrice(total);
+    order.setStatus("NEW");
+
+    orderRepository.save(order);
+}
 
     public void updateOrder(Integer id, Order order) {
 
