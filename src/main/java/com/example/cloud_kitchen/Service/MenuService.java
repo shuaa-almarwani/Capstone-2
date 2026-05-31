@@ -31,10 +31,20 @@ public class MenuService {
         return menuRepository.findAll();
     }
 
-    public void addMenuItem(Integer requesterId, Menu menu) {
-        checkMenuAccess(requesterId, menu.getVendorId());
-        menuRepository.save(menu);
-    }
+    // public void addMenuItem(Integer requesterId, Menu menu) {
+    //     checkMenuAccess(requesterId, menu.getVendorId());
+    //     menuRepository.save(menu);
+    // }
+    public void addMenuItem(Integer requesterId,
+                        Integer vendorId,
+                        Menu menu) {
+
+    checkMenuAccess(requesterId, vendorId);
+
+    menu.setVendorId(vendorId);
+
+    menuRepository.save(menu);
+}
 
     public void updateMenuItem(Integer requesterId, Integer itemId, Menu menu) {
         Menu oldItem = menuRepository.findMenuById(itemId);
