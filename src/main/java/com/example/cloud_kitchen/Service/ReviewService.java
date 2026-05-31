@@ -29,26 +29,52 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
-    public void addReview(Review review) {
-        if (userRepository.findUserById(review.getUserId()) == null) {
-            throw new ApiException("User not found");
-        }
-        if (vendorRepository.findVendorById(review.getVendorId()) == null) {
-            throw new ApiException("Vendor not found");
-        }
+    // public void addReview(Review review) {
+    //     if (userRepository.findUserById(review.getUserId()) == null) {
+    //         throw new ApiException("User not found");
+    //     }
+    //     if (vendorRepository.findVendorById(review.getVendorId()) == null) {
+    //         throw new ApiException("Vendor not found");
+    //     }
 
-        Order completedOrder = orderRepository.findFirstByUserIdAndVendorIdAndStatus(
-                review.getUserId(),
-                review.getVendorId(),
-                "DELIVERED"
-        );
+    //     Order completedOrder = orderRepository.findFirstByUserIdAndVendorIdAndStatus(
+    //             review.getUserId(),
+    //             review.getVendorId(),
+    //             "DELIVERED"
+    //     );
 
-        if (completedOrder == null) {
-            throw new ApiException("You cannot review this vendor because you haven't completed any orders from them yet");
-        }
+    //     if (completedOrder == null) {
+    //         throw new ApiException("You cannot review this vendor because you haven't completed any orders from them yet");
+    //     }
 
-        reviewRepository.save(review);
+    //     reviewRepository.save(review);
+    // }
+    public void addReview(Integer userId, Integer vendorId, Review review) {
+
+    if (userRepository.findUserById(userId) == null) {
+        throw new ApiException("User not found");
     }
+
+    if (vendorRepository.findVendorById(vendorId) == null) {
+        throw new ApiException("Vendor not found");
+    }
+
+    Order completedOrder = orderRepository.findFirstByUserIdAndVendorIdAndStatus(
+            userId,
+            vendorId,
+            "DELIVERED"
+    );
+
+    if (completedOrder == null) {
+        throw new ApiException("You cannot review this vendor because you haven't completed any orders from them yet");
+    }
+
+    review.setUserId(userId);
+    review.setVendorId(vendorId);
+    review.setOrderId(completedOrder.getId());
+
+    reviewRepository.save(review);
+}
     public void updateReview(Integer id, Review review) {
 
         Review oldReview = reviewRepository.findReviewById(id);
