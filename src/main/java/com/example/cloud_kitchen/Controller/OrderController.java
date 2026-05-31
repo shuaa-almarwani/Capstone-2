@@ -22,16 +22,29 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAllOrders());
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<?> addOrder(@RequestBody @Valid Order order, Errors errors) {
+    // @PostMapping("/add")
+    // public ResponseEntity<?> addOrder(@RequestBody @Valid Order order, Errors errors) {
 
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
-        }
+    //     if (errors.hasErrors()) {
+    //         return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
+    //     }
 
-        orderService.addOrder(order);
-        return ResponseEntity.ok(new ApiResponse("order created"));
+    //     orderService.addOrder(order);
+    //     return ResponseEntity.ok(new ApiResponse("order created"));
+    // }
+    @PostMapping("/add/{userId}/{vendorId}")
+public ResponseEntity<?> addOrder(@PathVariable Integer userId,
+                                  @PathVariable Integer vendorId,
+                                  @RequestBody @Valid Order order,
+                                  Errors errors) {
+
+    if (errors.hasErrors()) {
+        return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
     }
+
+    orderService.addOrder(userId, vendorId, order);
+    return ResponseEntity.ok(new ApiResponse("order created"));
+}
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateOrder(@PathVariable Integer id,
