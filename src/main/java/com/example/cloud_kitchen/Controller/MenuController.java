@@ -24,16 +24,29 @@ public class MenuController {
         return menuService.getAllMenus();
     }
 
-    @PostMapping("/add/{requesterId}")
-    public ResponseEntity<?> addMenuItem(@PathVariable Integer requesterId,
-                                         @RequestBody @Valid Menu menu,
-                                         Errors errors) {
-        if (errors.hasErrors()) {
-            return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
-        }
-        menuService.addMenuItem(requesterId, menu);
-        return ResponseEntity.status(201).body(new ApiResponse("Menu item added successfully"));
+    // @PostMapping("/add/{requesterId}")
+    // public ResponseEntity<?> addMenuItem(@PathVariable Integer requesterId,
+    //                                      @RequestBody @Valid Menu menu,
+    //                                      Errors errors) {
+    //     if (errors.hasErrors()) {
+    //         return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
+    //     }
+    //     menuService.addMenuItem(requesterId, menu);
+    //     return ResponseEntity.status(201).body(new ApiResponse("Menu item added successfully"));
+    // }
+    @PostMapping("/add/{requesterId}/{vendorId}")
+public ResponseEntity<?> addMenuItem(@PathVariable Integer requesterId,
+                                     @PathVariable Integer vendorId,
+                                     @RequestBody @Valid Menu menu,
+                                     Errors errors) {
+
+    if (errors.hasErrors()) {
+        return ResponseEntity.status(400).body(errors.getFieldError().getDefaultMessage());
     }
+
+    menuService.addMenuItem(requesterId, vendorId, menu);
+    return ResponseEntity.status(201).body(new ApiResponse("Menu item added successfully"));
+}
 
     @PutMapping("/update/{requesterId}/{itemId}")
     public ResponseEntity<?> updateMenuItem(@PathVariable Integer requesterId,
